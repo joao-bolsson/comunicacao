@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import model.Line;
 import model.Plane;
+import model.Point;
 
 /**
  *
@@ -20,7 +21,7 @@ public class Main extends JPanel {
 
     private static final short WIDTH_PANEL = 320, HEIGHT_PANEL = 200;
 
-    private final Plane plane = new Plane();
+    private final Plane plane = new Plane(-5, 0, 5);
 
     private final JButton newLineButton, clearButton;
 
@@ -55,7 +56,10 @@ public class Main extends JPanel {
                 int y1 = (int) (Math.random() * HEIGHT_PANEL);
                 int y2 = (int) (Math.random() * HEIGHT_PANEL);
                 Color randomColor = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
-                plane.add(new Line(x1, y1, x2, y2, randomColor));
+
+                Point start = new Point(x1, y1);
+                Point end = new Point(x2, y2);
+                plane.add(new Line(start, end, randomColor));
             }
         });
 
