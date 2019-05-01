@@ -14,6 +14,8 @@ import javax.swing.JPanel;
  */
 public class Plane extends JPanel {
 
+    private static final byte FONT_INSET = 10;
+
     private final int yStart, yMiddle, yEnd;
 
     private final List<Line> lines = new ArrayList<>();
@@ -66,14 +68,23 @@ public class Plane extends JPanel {
         super.paintComponent(g);
 
         drawPlane(g);
+        drawMarks(g);
+    }
+
+    private Line getAxisX() {
+        return new Line(0, (int) (getHeight() * 0.5), getWidth(), (int) (getHeight() * 0.5), Color.BLACK);
+    }
+
+    private Line getAxisY() {
+        return new Line(40, 0, 40, getHeight(), Color.BLACK);
     }
 
     private void drawPlane(final Graphics g) {
         Color oldColor = g.getColor();
         g.setColor(Color.BLACK);
 
-        Line lineX = new Line(0, (int) (getHeight() * 0.5), getWidth(), (int) (getHeight() * 0.5), Color.BLACK);
-        Line lineY = new Line(40, 0, 40, getHeight(), Color.BLACK);
+        Line lineX = getAxisX();
+        Line lineY = getAxisY();
 
         List<Line> axis = Arrays.asList(lineX, lineY);
 
@@ -82,6 +93,36 @@ public class Plane extends JPanel {
         }
 
         g.setColor(oldColor);
+    }
+
+    private void drawMarks(final Graphics g) {
+        Color oldColor = g.getColor();
+        g.setColor(Color.BLACK);
+
+        Line axisX = getAxisX();
+        Line axisY = getAxisY();
+
+        final int x = axisY.getX1() - FONT_INSET;
+
+        g.drawString(Integer.toString(yEnd), x, getYMax());
+        g.drawString(Integer.toString(yMiddle), x, axisX.getY1());
+        g.drawString(Integer.toString(yStart), x, getYMin());
+
+        g.setColor(oldColor);
+    }
+
+    private int getYMax() {
+        Line axisX = getAxisX();
+        Line axisY = getAxisY();
+
+        return (int) (axisX.getY1() - axisY.getY1()) / 2;
+    }
+
+    private int getYMin() {
+        Line axisX = getAxisX();
+        Line axisY = getAxisY();
+
+        return (int) (axisY.getY2() + axisX.getY1()) / 2;
     }
 
 }
