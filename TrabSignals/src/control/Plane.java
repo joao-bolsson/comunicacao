@@ -1,12 +1,13 @@
-package model;
+package control;
 
-import control.SimplePainter;
+import model.SimplePainter;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;
+import model.Line;
 
 /**
  *
