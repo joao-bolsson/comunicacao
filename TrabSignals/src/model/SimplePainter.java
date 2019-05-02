@@ -2,8 +2,6 @@ package model;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import model.Line;
-import model.Painter;
 
 /**
  *
@@ -24,6 +22,8 @@ public class SimplePainter extends Painter {
         if (text == null || text.isEmpty()) {
             return;
         }
+
+        horizontalLines.clear();
 
         /**
          * calculates the size of X axis (only the useful size) is because that the '- y.getX1()' to recompense the
@@ -62,6 +62,8 @@ public class SimplePainter extends Painter {
             g.drawLine(x1, y1, x2, y1);
             i++;
         }
+
+        drawVerticalLines(g);
 
         g.setColor(oldColor);
     }

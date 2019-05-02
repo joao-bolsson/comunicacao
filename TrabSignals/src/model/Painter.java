@@ -51,8 +51,27 @@ public abstract class Painter {
         }
     }
 
+    /**
+     * Draw the vertical lines.
+     *
+     * @param g Referenced graphic.
+     */
     protected void drawVerticalLines(final Graphics g) {
-        // TODO
+        if (horizontalLines.size() < 2) {
+            return;
+        }
+
+        Color oldColor = g.getColor();
+        g.setColor(color);
+
+        for (int i = 0; i < horizontalLines.size() - 1; i++) {
+            Line line = horizontalLines.get(i);
+            Line next = horizontalLines.get(i + 1);
+
+            g.drawLine(line.getX2(), line.getY2(), next.getX1(), next.getY1());
+        }
+
+        g.setColor(oldColor);
     }
 
     /**
