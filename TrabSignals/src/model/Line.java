@@ -50,4 +50,8 @@ public class Line {
         return color;
     }
 
+    public int length() {
+        return (int) Math.hypot(start.getX() - end.getX(), start.getY() - end.getY());
+    }
+
 }

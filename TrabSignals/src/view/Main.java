@@ -1,16 +1,17 @@
 package view;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import model.Line;
+import javax.swing.JTextField;
 import model.Plane;
-import model.Point;
 
 /**
  *
@@ -23,15 +24,16 @@ public class Main extends JPanel {
 
     private final Plane plane = new Plane(-5, 0, 5);
 
-    private final JButton newLineButton, clearButton;
+    private final JButton btnOk;
+
+    private final JTextField textField = new JTextField(20);
 
     /**
      * Default construct.
      */
     public Main() {
         super(new BorderLayout());
-        newLineButton = new JButton("New Line");
-        clearButton = new JButton("Clear");
+        btnOk = new JButton("OK");
 
         addListeners();
         init();
@@ -39,34 +41,32 @@ public class Main extends JPanel {
 
     private void init() {
         setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
-        JPanel buttonsPanel = new JPanel();
-        buttonsPanel.add(newLineButton);
-        buttonsPanel.add(clearButton);
+
+        JPanel controlPanel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints cons = new GridBagConstraints();
+        cons.gridx = 0;
+        cons.gridy = 0;
+        cons.anchor = GridBagConstraints.NORTHWEST;
+        cons.fill = GridBagConstraints.BOTH;
+        cons.insets = new Insets(5, 5, 5, 5);
+        controlPanel.add(textField, cons);
+
+        cons.gridx++;
+        controlPanel.add(btnOk, cons);
 
         add(plane, BorderLayout.CENTER);
-        add(buttonsPanel, BorderLayout.SOUTH);
+        add(controlPanel, BorderLayout.SOUTH);
     }
 
     private void addListeners() {
-        newLineButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                int x1 = (int) (Math.random() * WIDTH_PANEL);
-                int x2 = (int) (Math.random() * WIDTH_PANEL);
-                int y1 = (int) (Math.random() * HEIGHT_PANEL);
-                int y2 = (int) (Math.random() * HEIGHT_PANEL);
-                Color randomColor = new Color((float) Math.random(), (float) Math.random(), (float) Math.random());
-
-                Point start = new Point(x1, y1);
-                Point end = new Point(x2, y2);
-                plane.add(new Line(start, end, randomColor));
-            }
-        });
-
-        clearButton.addActionListener(new ActionListener() {
+        btnOk.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 plane.clear();
+
+                String text = textField.getText();
+                plane.drawSimple(text);
             }
         });
     }

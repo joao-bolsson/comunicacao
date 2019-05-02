@@ -1,5 +1,6 @@
 package model;
 
+import control.SimplePainter;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -19,6 +20,8 @@ public class Plane extends JPanel {
     private final int yStart, yMiddle, yEnd;
 
     private final List<Line> lines = new ArrayList<>();
+
+    private final SimplePainter simplePainter = new SimplePainter();
 
     /**
      * Default construct.
@@ -69,13 +72,30 @@ public class Plane extends JPanel {
 
         drawPlane(g);
         drawMarks(g);
+        simplePainter.draw(g, getAxisX(), getAxisY(), getYMax(), getYMin());
     }
 
+    /**
+     * Draw with simple painter.
+     *
+     * @param text Text to be drawn.
+     */
+    public void drawSimple(final String text) {
+        simplePainter.setText(text);
+    }
+
+    /**
+     * @return The line that represents the X axis.
+     */
     private Line getAxisX() {
         return new Line(0, (int) (getHeight() * 0.5), getWidth(), (int) (getHeight() * 0.5), Color.BLACK);
     }
 
+    /**
+     * @return The line that represents the Y axis.
+     */
     private Line getAxisY() {
+        // if we draw the y axis starting at point (0, 0) we can't see it. So, we push a litle bit to the right (40).
         return new Line(40, 0, 40, getHeight(), Color.BLACK);
     }
 
