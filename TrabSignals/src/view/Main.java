@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import control.Plane;
+import javax.swing.BorderFactory;
+import javax.swing.JCheckBox;
 
 /**
  *
@@ -20,13 +22,20 @@ import control.Plane;
  */
 public class Main extends JPanel {
 
-    private static final short WIDTH_PANEL = 320, HEIGHT_PANEL = 200;
+    private static final short WIDTH_PANEL = 500, HEIGHT_PANEL = 460;
 
     private final Plane plane = new Plane(-5, 0, 5);
 
     private final JButton btnOk;
 
     private final JTextField textField = new JTextField(20);
+
+    private final JCheckBox checkNRZL = new JCheckBox("NRZ-L"),
+            checkNRZI = new JCheckBox("NRZ-I"),
+            checkAMI = new JCheckBox("AMI"),
+            checkPseudo = new JCheckBox("Pseudoternário"),
+            checkManch = new JCheckBox("Manchester"),
+            checkManchDif = new JCheckBox("Manchester Diferencial");
 
     /**
      * Default construct.
@@ -39,8 +48,42 @@ public class Main extends JPanel {
         init();
     }
 
+    private JPanel buildOptPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Opções"));
+
+        GridBagConstraints cons = new GridBagConstraints();
+        cons.gridx = 0;
+        cons.gridy = 0;
+        cons.anchor = GridBagConstraints.NORTHWEST;
+        cons.fill = GridBagConstraints.BOTH;
+        cons.insets = new Insets(5, 5, 5, 5);
+
+        panel.add(checkNRZL, cons);
+
+        cons.gridx++;
+        panel.add(checkNRZI, cons);
+
+        cons.gridx++;
+        panel.add(checkAMI, cons);
+
+        cons.gridx = 0;
+        cons.gridy++;
+        panel.add(checkPseudo, cons);
+
+        cons.gridx++;
+        panel.add(checkManch, cons);
+
+        cons.gridx++;
+        panel.add(checkManchDif, cons);
+
+        return panel;
+    }
+
     private void init() {
         setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
+
+        JPanel optPanel = buildOptPanel();
 
         JPanel controlPanel = new JPanel(new GridBagLayout());
 
@@ -50,6 +93,11 @@ public class Main extends JPanel {
         cons.anchor = GridBagConstraints.NORTHWEST;
         cons.fill = GridBagConstraints.BOTH;
         cons.insets = new Insets(5, 5, 5, 5);
+        cons.gridwidth = 2;
+        controlPanel.add(optPanel, cons);
+
+        cons.gridwidth = 1;
+        cons.gridy++;
         controlPanel.add(textField, cons);
 
         cons.gridx++;
@@ -60,13 +108,55 @@ public class Main extends JPanel {
     }
 
     private void addListeners() {
+        checkNRZL.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                plane.drawNRZL(checkNRZL.isSelected());
+            }
+        });
+
+        checkNRZI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                plane.drawNRZI(checkNRZI.isSelected());
+            }
+        });
+
+        checkAMI.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                plane.drawAMI(checkAMI.isSelected());
+            }
+        });
+
+        checkPseudo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                plane.drawPseudo(checkPseudo.isSelected());
+            }
+        });
+
+        checkManch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                plane.drawManch(checkManch.isSelected());
+            }
+        });
+
+        checkManchDif.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(final ActionEvent e) {
+                plane.drawManchDif(checkManchDif.isSelected());
+            }
+        });
+
         btnOk.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
                 plane.clear();
 
                 String text = textField.getText();
-                plane.drawSimple(text);
+                plane.draw(text);
             }
         });
     }

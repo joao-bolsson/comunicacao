@@ -7,7 +7,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.JPanel;
+import model.AMIPainter;
 import model.Line;
+import model.ManchDifPainter;
+import model.ManchPainter;
+import model.NRZIPainter;
+import model.NRZLPainter;
+import model.Painter;
+import model.PseudoTernPainter;
 
 /**
  *
@@ -23,6 +30,17 @@ public class Plane extends JPanel {
     private final List<Line> lines = new ArrayList<>();
 
     private final SimplePainter simplePainter = new SimplePainter();
+
+    private final Painter nrzlPainter = new NRZLPainter();
+    private final Painter nrziPainter = new NRZIPainter();
+    private final Painter amiPainter = new AMIPainter();
+    private final Painter pseudoPainter = new PseudoTernPainter();
+    private final Painter manchPainter = new ManchPainter();
+    private final Painter manchDifPainter = new ManchDifPainter();
+
+    // TODO: remove simple painter (only for tests)
+    private final List<Painter> painters = Arrays.asList(simplePainter, nrzlPainter, nrziPainter, amiPainter, pseudoPainter,
+            manchPainter, manchDifPainter);
 
     /**
      * Default construct.
@@ -73,16 +91,47 @@ public class Plane extends JPanel {
 
         drawPlane(g);
         drawMarks(g);
-        simplePainter.draw(g, getAxisX(), getAxisY(), getYMax(), getYMin());
+
+        for (Painter painter : painters) {
+            if (painter.isIsToDraw()) {
+                painter.draw(g, getAxisX(), getAxisY(), getYMax(), getYMin());
+            }
+        }
+    }
+
+    public void drawNRZL(final boolean isToDraw) {
+        nrzlPainter.setIsToDraw(isToDraw);
+    }
+
+    public void drawNRZI(final boolean isToDraw) {
+        nrziPainter.setIsToDraw(isToDraw);
+    }
+
+    public void drawAMI(final boolean isToDraw) {
+        amiPainter.setIsToDraw(isToDraw);
+    }
+
+    public void drawPseudo(final boolean isToDraw) {
+        pseudoPainter.setIsToDraw(isToDraw);
+    }
+
+    public void drawManch(final boolean isToDraw) {
+        manchPainter.setIsToDraw(isToDraw);
+    }
+
+    public void drawManchDif(final boolean isToDraw) {
+        manchDifPainter.setIsToDraw(isToDraw);
     }
 
     /**
-     * Draw with simple painter.
+     * Draw the text.
      *
-     * @param text Text to be drawn.
+     * @param text Text to draw.
      */
-    public void drawSimple(final String text) {
-        simplePainter.setText(text);
+    public void draw(final String text) {
+        for (Painter painter : painters) {
+            painter.setText(text);
+        }
     }
 
     /**
