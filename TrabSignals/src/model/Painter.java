@@ -16,7 +16,7 @@ public abstract class Painter {
 
     protected Color color = Color.BLACK;
 
-    private boolean isToDraw = false;
+    protected boolean isToDraw = false;
 
     /**
      * All the horizontal lines drawn by the painter.

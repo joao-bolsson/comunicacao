@@ -93,9 +93,7 @@ public class Plane extends JPanel {
         drawMarks(g);
 
         for (Painter painter : painters) {
-            if (painter.isIsToDraw()) {
-                painter.draw(g, getAxisX(), getAxisY(), getYMax(), getYMin());
-            }
+            painter.draw(g, getAxisX(), getAxisY(), getYMax(), getYMin());
         }
     }
 

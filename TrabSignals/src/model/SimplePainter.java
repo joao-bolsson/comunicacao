@@ -15,10 +15,14 @@ public class SimplePainter extends Painter {
      */
     public SimplePainter() {
         color = Color.RED;
+        isToDraw = true;
     }
 
     @Override
     public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
+        if (!isToDraw) {
+            return;
+        }
         if (text == null || text.isEmpty()) {
             return;
         }
