@@ -38,8 +38,8 @@ public class ManchPainter extends Painter {
             addLine(a);
             addLine(b);
 
-            g.drawLine(a.getX1(), a.getY1(), a.getX2(), a.getY2());
-            g.drawLine(b.getX1(), b.getY1(), b.getX2(), b.getY2());
+            drawLine(g, a);
+            drawLine(g, b);
 
             i++;
         }

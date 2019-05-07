@@ -50,9 +50,9 @@ public class NRZIPainter extends Painter {
                 }
             }
 
-            addLine(new Line(x1, y1, x2, y1));
-
-            g.drawLine(x1, y1, x2, y1);
+            Line line = new Line(x1, y1, x2, y1);
+            addLine(line);
+            drawLine(g, line);
             i++;
         }
     }

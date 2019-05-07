@@ -38,9 +38,9 @@ public class SimplePainter extends Painter {
                 y1 = yMax;
             }
 
-            addLine(new Line(x1, y1, x2, y1));
-
-            g.drawLine(x1, y1, x2, y1);
+            Line line = new Line(x1, y1, x2, y1);
+            addLine(line);
+            drawLine(g, line);
             i++;
         }
     }

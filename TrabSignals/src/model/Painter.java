@@ -1,7 +1,10 @@
 package model;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Stroke;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +31,8 @@ public abstract class Painter {
      * All the horizontal lines drawn by the painter.
      */
     protected final List<Line> horizontalLines = new ArrayList<>();
+
+    private final Stroke stroke = new BasicStroke(3);
 
     /**
      * Default construct.
@@ -92,17 +97,12 @@ public abstract class Painter {
             return;
         }
 
-        Color oldColor = g.getColor();
-        g.setColor(color);
-
         for (int i = 0; i < horizontalLines.size() - 1; i++) {
             Line line = horizontalLines.get(i);
             Line next = horizontalLines.get(i + 1);
 
-            g.drawLine(line.getX2(), line.getY2(), next.getX1(), next.getY1());
+            drawLine(g, new Line(line.getX2(), line.getY2(), next.getX1(), next.getY1()));
         }
-
-        g.setColor(oldColor);
     }
 
     /**
@@ -140,6 +140,26 @@ public abstract class Painter {
         drawVerticalLines(g);
 
         g.setColor(oldColor);
+    }
+
+    /**
+     * Draws a line.
+     *
+     * @param g Graphics to draw the line.
+     * @param line Line to draw.
+     */
+    protected void drawLine(final Graphics g, final Line line) {
+        Graphics2D g2 = (Graphics2D) g;
+        Stroke oldStroke = g2.getStroke();
+        Color oldColor = g2.getColor();
+
+        g2.setColor(color);
+        g2.setStroke(stroke);
+
+        g2.drawLine(line.getX1(), line.getY1(), line.getX2(), line.getY2());
+
+        g2.setStroke(oldStroke);
+        g2.setColor(oldColor);
     }
 
     /**
