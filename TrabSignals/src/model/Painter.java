@@ -101,7 +101,11 @@ public abstract class Painter {
             Line line = horizontalLines.get(i);
             Line next = horizontalLines.get(i + 1);
 
-            drawLine(g, new Line(line.getX2(), line.getY2(), next.getX1(), next.getY1()));
+            Line vert = new Line(line.getX2(), line.getY2(), next.getX1(), next.getY1());
+
+            if (vert.getY1() != vert.getY2()) {
+                drawLine(g, vert);
+            }
         }
     }
 
