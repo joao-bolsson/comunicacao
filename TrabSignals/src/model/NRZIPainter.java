@@ -4,11 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
-//boolean flag;
+
 /**
  *
- * @author João Bolsson (jvmarques@inf.ufsm.br)
- * @version 2019, May 02.
+ * @author Gabriel Righi (gfrighi@inf.ufsm.br)
+ * @version 2019, May 06.
  */
 public class NRZIPainter extends Painter {
     
