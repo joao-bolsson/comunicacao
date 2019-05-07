@@ -42,6 +42,8 @@ public class Plane extends JPanel {
     private final List<Painter> painters = Arrays.asList(simplePainter, nrzlPainter, nrziPainter, amiPainter, pseudoPainter,
             manchPainter, manchDifPainter);
 
+    private String text;
+
     /**
      * Default construct.
      *
@@ -91,6 +93,7 @@ public class Plane extends JPanel {
 
         drawPlane(g);
         drawMarks(g);
+        drawBlocksSeparator(g);
 
         for (Painter painter : painters) {
             painter.draw(g, getAxisX(), getAxisY(), getYMax(), getYMin());
@@ -133,6 +136,7 @@ public class Plane extends JPanel {
      * @param text Text to draw.
      */
     public void draw(final String text) {
+        this.text = text;
         for (Painter painter : painters) {
             painter.setText(text);
         }
@@ -167,6 +171,42 @@ public class Plane extends JPanel {
         }
 
         g.setColor(oldColor);
+    }
+
+    private void drawBlocksSeparator(final Graphics g) {
+        if (text != null && !text.isEmpty()) {
+            Color oldColor = g.getColor();
+            g.setColor(Color.BLACK);
+
+            Line x = getAxisX();
+            Line y = getAxisY();
+
+            /**
+             * calculates the size of X axis (only the useful size) is because that the '- y.getX1()' to recompense the
+             * unuseful size.
+             */
+            int lengthX = x.length() - y.getX1();
+
+            /**
+             * Estimates the size of each "line block" to draw a signal
+             */
+            int blockSize = lengthX / text.length();
+
+            // x1, y1, x2, y2
+            int[] coord = new int[4];
+
+            for (int i = 0; i < text.length(); i++) {
+                coord[0] = x.getX1() + blockSize * i + y.getX1();
+                coord[2] = coord[0] + blockSize;
+
+                coord[1] = y.getY1();
+                coord[3] = y.getY2();
+
+                g.drawLine(coord[2], coord[1], coord[2], coord[3]);
+            }
+
+            g.setColor(oldColor);
+        }
     }
 
     private void drawMarks(final Graphics g) {

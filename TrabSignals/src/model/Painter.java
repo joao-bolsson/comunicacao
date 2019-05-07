@@ -30,7 +30,7 @@ public abstract class Painter {
     /**
      * All the horizontal lines drawn by the painter.
      */
-    protected final List<Line> horizontalLines = new ArrayList<>();
+    private final List<Line> horizontalLines = new ArrayList<>();
 
     private final Stroke stroke = new BasicStroke(3);
 
@@ -92,7 +92,7 @@ public abstract class Painter {
      *
      * @param g Referenced graphic.
      */
-    protected void drawVerticalLines(final Graphics g) {
+    private void drawVerticalLines(final Graphics g) {
         if (horizontalLines.size() < 2) {
             return;
         }
