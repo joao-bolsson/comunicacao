@@ -12,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import control.Plane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 
@@ -108,6 +110,17 @@ public class Main extends JPanel {
     }
 
     private void addListeners() {
+        textField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(final KeyEvent e) {
+                char c = e.getKeyChar();
+
+                if (!(c != KeyEvent.VK_BACK_SPACE && (c == '0' || c == '1'))) {
+                    e.consume();
+                }
+            }
+        });
+
         checkNRZL.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
