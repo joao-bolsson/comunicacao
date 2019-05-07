@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -9,8 +10,15 @@ import java.awt.Graphics;
  */
 public class ManchDifPainter extends Painter {
 
+    /**
+     * Default construct.
+     */
+    public ManchDifPainter() {
+        color = Color.PINK;
+    }
+
     @Override
-    public void draw(Graphics g, Line x, Line y, int yMax, int yMin) {
+    public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
         // TODO
     }
 

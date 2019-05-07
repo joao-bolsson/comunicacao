@@ -10,17 +10,16 @@ import java.awt.Graphics;
  */
 public class AMIPainter extends Painter {
 
+    /**
+     * Default construct.
+     */
     public AMIPainter() {
         color = Color.GREEN;
-        isToDraw = true;
     }
-    
+
     @Override
-   public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
-        if (!isToDraw) {
-            return;
-        }
-        if (text == null || text.isEmpty()) {
+    public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
+        if (!canDraw()) {
             return;
         }
 
@@ -28,7 +27,7 @@ public class AMIPainter extends Painter {
 
         /**
          * calculates the size of X axis (only the useful size) is because that the '- y.getX1()' to recompense the
-         * unuseful size
+         * unuseful size.
          */
         int lengthX = x.length() - y.getX1();
 
@@ -40,7 +39,7 @@ public class AMIPainter extends Painter {
         Color oldColor = g.getColor();
         g.setColor(color);
         String[] split = text.split("");
-        
+
         boolean flag = false;
         int i = 0;
         for (String s : split) {
@@ -53,14 +52,13 @@ public class AMIPainter extends Painter {
             if (bit == 0) {
                 // desenha no zero
                 y1 = x.getY1();
-                
+
             } else if (bit == 1) {
                 // desenha no 5 ou -5
-                if(flag == false){
+                if (flag == false) {
                     y1 = yMax;
                     flag = true;
-                }
-                else if (flag == true){
+                } else if (flag == true) {
                     y1 = yMin;
                     flag = false;
                 }

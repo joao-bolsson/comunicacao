@@ -10,17 +10,16 @@ import java.awt.Graphics;
  */
 public class PseudoTernPainter extends Painter {
 
+    /**
+     * Default construct.
+     */
     public PseudoTernPainter() {
         color = Color.YELLOW;
-        isToDraw = true;
     }
-    
+
     @Override
     public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
-        if (!isToDraw) {
-            return;
-        }
-        if (text == null || text.isEmpty()) {
+        if (!canDraw()) {
             return;
         }
 
@@ -40,7 +39,7 @@ public class PseudoTernPainter extends Painter {
         Color oldColor = g.getColor();
         g.setColor(color);
         String[] split = text.split("");
-        
+
         boolean flag = false;
         int i = 0;
         for (String s : split) {
@@ -53,15 +52,14 @@ public class PseudoTernPainter extends Painter {
             if (bit == 0) {
                 // desenha no 5 ou -5
                 y1 = x.getY1();
-                if(flag == false){
+                if (flag == false) {
                     y1 = yMax;
                     flag = true;
-                }
-                else if (flag == true){
+                } else if (flag == true) {
                     y1 = yMin;
                     flag = false;
                 }
-                
+
             } else if (bit == 1) {
                 // desenha no zero
                 y1 = x.getY1();

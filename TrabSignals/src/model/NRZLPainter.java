@@ -10,17 +10,16 @@ import java.awt.Graphics;
  */
 public class NRZLPainter extends Painter {
 
+    /**
+     * Default construct.
+     */
     public NRZLPainter() {
         color = Color.RED;
-        isToDraw = true;
     }
-    
+
     @Override
-     public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
-        if (!isToDraw) {
-            return;
-        }
-        if (text == null || text.isEmpty()) {
+    public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
+        if (!canDraw()) {
             return;
         }
 
@@ -68,6 +67,5 @@ public class NRZLPainter extends Painter {
 
         g.setColor(oldColor);
     }
-
 
 }

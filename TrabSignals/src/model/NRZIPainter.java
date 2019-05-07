@@ -3,26 +3,23 @@ package model;
 import java.awt.Color;
 import java.awt.Graphics;
 
-
-
 /**
  *
  * @author Gabriel Righi (gfrighi@inf.ufsm.br)
  * @version 2019, May 06.
  */
 public class NRZIPainter extends Painter {
-    
-   public NRZIPainter() {
+
+    /**
+     * Default construct.
+     */
+    public NRZIPainter() {
         color = Color.BLUE;
-        isToDraw = true;
     }
 
     @Override
     public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
-        if (!isToDraw) {
-            return;
-        }
-        if (text == null || text.isEmpty()) {
+        if (!canDraw()) {
             return;
         }
 
@@ -42,7 +39,7 @@ public class NRZIPainter extends Painter {
         Color oldColor = g.getColor();
         g.setColor(color);
         String[] split = text.split("");
-        
+
         boolean flag = false;
         int i = 0;
         for (String s : split) {
@@ -54,20 +51,18 @@ public class NRZIPainter extends Painter {
             int y1 = 0;
             if (bit == 0) {
                 // desenha no zero
-                if(flag == false){
+                if (flag == false) {
                     y1 = yMax;
-                }
-                else if(flag == true){
+                } else if (flag == true) {
                     y1 = yMin;
                 }
-                
+
             } else if (bit == 1) {
                 // desenha no 5
-                if(flag == false){
+                if (flag == false) {
                     y1 = yMin;
                     flag = true;
-                }
-                else if (flag == true){
+                } else if (flag == true) {
                     y1 = yMax;
                     flag = false;
                 }

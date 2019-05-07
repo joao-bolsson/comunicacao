@@ -12,11 +12,17 @@ import java.util.List;
  */
 public abstract class Painter {
 
+    /**
+     * Text to draw.
+     */
     protected String text;
 
+    /**
+     * Color to draw.
+     */
     protected Color color = Color.BLACK;
 
-    protected boolean isToDraw = false;
+    private boolean isToDraw = false;
 
     /**
      * All the horizontal lines drawn by the painter.
@@ -32,10 +38,18 @@ public abstract class Painter {
         // empty
     }
 
+    /**
+     * Sets if the painter is to draw.
+     *
+     * @param isToDraw Flag to set.
+     */
     public void setIsToDraw(final boolean isToDraw) {
         this.isToDraw = isToDraw;
     }
 
+    /**
+     * @return True if the painter was 'checked' to draw.
+     */
     public boolean isIsToDraw() {
         return isToDraw;
     }
@@ -59,6 +73,13 @@ public abstract class Painter {
         if (!horizontalLines.contains(line) && line.getY1() == line.getY2()) {
             horizontalLines.add(line);
         }
+    }
+
+    /**
+     * @return True if the painter is allowed to draw.
+     */
+    public boolean canDraw() {
+        return isToDraw && text != null && !text.isEmpty();
     }
 
     /**
