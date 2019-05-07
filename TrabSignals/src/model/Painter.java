@@ -83,15 +83,10 @@ public abstract class Painter {
     /**
      * @return True if the painter is allowed to draw.
      */
-    public boolean canDraw() {
+    protected boolean canDraw() {
         return isToDraw && text != null && !text.isEmpty();
     }
 
-    /**
-     * Draw the vertical lines.
-     *
-     * @param g Referenced graphic.
-     */
     private void drawVerticalLines(final Graphics g) {
         if (horizontalLines.size() < 2) {
             return;

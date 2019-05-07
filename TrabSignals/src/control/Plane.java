@@ -221,7 +221,10 @@ public class Plane extends JPanel {
             // x1, y1, x2, y2
             int[] coord = new int[4];
 
-            for (int i = 0; i < text.length(); i++) {
+            String[] split = text.split("");
+
+            int i = 0;
+            for (String bit : split) {
                 coord[0] = x.getX1() + blockSize * i + y.getX1();
                 coord[2] = coord[0] + blockSize;
 
@@ -229,6 +232,9 @@ public class Plane extends JPanel {
                 coord[3] = y.getY2();
 
                 g.drawLine(coord[2], coord[1], coord[2], coord[3]);
+
+                g.drawString(bit, (coord[0] + coord[2]) / 2, coord[3]);
+                i++;
             }
 
             g.setColor(oldColor);
