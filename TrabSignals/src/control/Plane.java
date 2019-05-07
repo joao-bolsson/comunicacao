@@ -1,6 +1,5 @@
 package control;
 
-import model.SimplePainter;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
@@ -29,8 +28,6 @@ public class Plane extends JPanel {
 
     private final List<Line> lines = new ArrayList<>();
 
-    private final SimplePainter simplePainter = new SimplePainter();
-
     private final Painter nrzlPainter = new NRZLPainter();
     private final Painter nrziPainter = new NRZIPainter();
     private final Painter amiPainter = new AMIPainter();
@@ -38,8 +35,7 @@ public class Plane extends JPanel {
     private final Painter manchPainter = new ManchPainter();
     private final Painter manchDifPainter = new ManchDifPainter();
 
-    // TODO: remove simple painter (only for tests)
-    private final List<Painter> painters = Arrays.asList(simplePainter, nrzlPainter, nrziPainter, amiPainter, pseudoPainter,
+    private final List<Painter> painters = Arrays.asList(nrzlPainter, nrziPainter, amiPainter, pseudoPainter,
             manchPainter, manchDifPainter);
 
     private String text;
@@ -100,33 +96,63 @@ public class Plane extends JPanel {
         }
     }
 
-    public void drawNRZL(final boolean isToDraw) {
-        nrzlPainter.setIsToDraw(isToDraw);
+    private void resetPainters() {
+        for (Painter p : painters) {
+            p.setIsToDraw(false);
+        }
+    }
+
+    /**
+     * Draws the NRZ-L representation.
+     */
+    public void drawNRZL() {
+        resetPainters();
+        nrzlPainter.setIsToDraw(true);
         repaint();
     }
 
-    public void drawNRZI(final boolean isToDraw) {
-        nrziPainter.setIsToDraw(isToDraw);
+    /**
+     * Draws the NRZ-I representation.
+     */
+    public void drawNRZI() {
+        resetPainters();
+        nrziPainter.setIsToDraw(true);
         repaint();
     }
 
-    public void drawAMI(final boolean isToDraw) {
-        amiPainter.setIsToDraw(isToDraw);
+    /**
+     * Draws the AMI representation.
+     */
+    public void drawAMI() {
+        resetPainters();
+        amiPainter.setIsToDraw(true);
         repaint();
     }
 
-    public void drawPseudo(final boolean isToDraw) {
-        pseudoPainter.setIsToDraw(isToDraw);
+    /**
+     * Draws the Pseudoternary representation.
+     */
+    public void drawPseudo() {
+        resetPainters();
+        pseudoPainter.setIsToDraw(true);
         repaint();
     }
 
-    public void drawManch(final boolean isToDraw) {
-        manchPainter.setIsToDraw(isToDraw);
+    /**
+     * Draws the Manchester representation.
+     */
+    public void drawManch() {
+        resetPainters();
+        manchPainter.setIsToDraw(true);
         repaint();
     }
 
-    public void drawManchDif(final boolean isToDraw) {
-        manchDifPainter.setIsToDraw(isToDraw);
+    /**
+     * Draws the Differential Manchester representation.
+     */
+    public void drawManchDif() {
+        resetPainters();
+        manchDifPainter.setIsToDraw(true);
         repaint();
     }
 

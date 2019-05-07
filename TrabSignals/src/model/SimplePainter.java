@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 /**
+ * Base class used for tests (not used in GUI).
  *
  * @author João Bolsson (jvmarques@inf.ufsm.br)
  * @version 2019, May 02.

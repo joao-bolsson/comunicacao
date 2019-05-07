@@ -15,7 +15,8 @@ import control.Plane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
 
 /**
  *
@@ -32,12 +33,12 @@ public class Main extends JPanel {
 
     private final JTextField textField = new JTextField(20);
 
-    private final JCheckBox checkNRZL = new JCheckBox("NRZ-L"),
-            checkNRZI = new JCheckBox("NRZ-I"),
-            checkAMI = new JCheckBox("AMI"),
-            checkPseudo = new JCheckBox("Pseudoternário"),
-            checkManch = new JCheckBox("Manchester"),
-            checkManchDif = new JCheckBox("Manchester Diferencial");
+    private final JRadioButton checkNRZL = new JRadioButton("NRZ-L"),
+            checkNRZI = new JRadioButton("NRZ-I"),
+            checkAMI = new JRadioButton("AMI"),
+            checkPseudo = new JRadioButton("Pseudoternário"),
+            checkManch = new JRadioButton("Manchester"),
+            checkManchDif = new JRadioButton("Manchester Diferencial");
 
     /**
      * Default construct.
@@ -83,6 +84,14 @@ public class Main extends JPanel {
     }
 
     private void init() {
+        ButtonGroup btnGroup = new ButtonGroup();
+        btnGroup.add(checkAMI);
+        btnGroup.add(checkManch);
+        btnGroup.add(checkManchDif);
+        btnGroup.add(checkNRZI);
+        btnGroup.add(checkNRZL);
+        btnGroup.add(checkPseudo);
+
         setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
 
         JPanel optPanel = buildOptPanel();
@@ -124,42 +133,42 @@ public class Main extends JPanel {
         checkNRZL.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                plane.drawNRZL(checkNRZL.isSelected());
+                plane.drawNRZL();
             }
         });
 
         checkNRZI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                plane.drawNRZI(checkNRZI.isSelected());
+                plane.drawNRZI();
             }
         });
 
         checkAMI.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                plane.drawAMI(checkAMI.isSelected());
+                plane.drawAMI();
             }
         });
 
         checkPseudo.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                plane.drawPseudo(checkPseudo.isSelected());
+                plane.drawPseudo();
             }
         });
 
         checkManch.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                plane.drawManch(checkManch.isSelected());
+                plane.drawManch();
             }
         });
 
         checkManchDif.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
-                plane.drawManchDif(checkManchDif.isSelected());
+                plane.drawManchDif();
             }
         });
 
