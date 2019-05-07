@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 /**
@@ -9,9 +10,64 @@ import java.awt.Graphics;
  */
 public class NRZLPainter extends Painter {
 
-    @Override
-    public void draw(Graphics g, Line x, Line y, int yMax, int yMin) {
-        // TODO
+    public NRZLPainter() {
+        color = Color.RED;
+        isToDraw = true;
     }
+    
+    @Override
+     public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
+        if (!isToDraw) {
+            return;
+        }
+        if (text == null || text.isEmpty()) {
+            return;
+        }
+
+        horizontalLines.clear();
+
+        /**
+         * calculates the size of X axis (only the useful size) is because that the '- y.getX1()' to recompense the
+         * unuseful size
+         */
+        int lengthX = x.length() - y.getX1();
+
+        /**
+         * Estimates the size of each "line block" to draw a signal
+         */
+        int blockSize = lengthX / text.length();
+
+        Color oldColor = g.getColor();
+        g.setColor(color);
+        String[] split = text.split("");
+
+        int i = 0;
+        for (String s : split) {
+            int bit = Integer.parseInt(s);
+
+            int x1 = x.getX1() + blockSize * i + y.getX1();
+            int x2 = x1 + blockSize;
+
+            int y1 = 0;
+            if (bit == 0) {
+                // desenha no zero
+
+                y1 = yMax;
+            } else if (bit == 1) {
+                // desenha no 5
+                y1 = yMin;
+            }
+
+            addLine(new Line(x1, y1, x2, y1, color));
+
+            g.drawLine(x1, y1, x2, y1);
+            i++;
+        }
+
+        drawVerticalLines(g);
+
+        g.setColor(oldColor);
+    }
+
 
 }
