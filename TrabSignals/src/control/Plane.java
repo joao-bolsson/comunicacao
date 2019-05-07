@@ -99,26 +99,32 @@ public class Plane extends JPanel {
 
     public void drawNRZL(final boolean isToDraw) {
         nrzlPainter.setIsToDraw(isToDraw);
+        repaint();
     }
 
     public void drawNRZI(final boolean isToDraw) {
         nrziPainter.setIsToDraw(isToDraw);
+        repaint();
     }
 
     public void drawAMI(final boolean isToDraw) {
         amiPainter.setIsToDraw(isToDraw);
+        repaint();
     }
 
     public void drawPseudo(final boolean isToDraw) {
         pseudoPainter.setIsToDraw(isToDraw);
+        repaint();
     }
 
     public void drawManch(final boolean isToDraw) {
         manchPainter.setIsToDraw(isToDraw);
+        repaint();
     }
 
     public void drawManchDif(final boolean isToDraw) {
         manchDifPainter.setIsToDraw(isToDraw);
+        repaint();
     }
 
     /**
