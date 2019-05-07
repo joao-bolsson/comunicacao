@@ -114,6 +114,44 @@ public abstract class Painter {
      * @param yMax Max y.
      * @param yMin Min y.
      */
-    public abstract void draw(Graphics g, Line x, Line y, int yMax, int yMin);
+    public final void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
+        if (!canDraw()) {
+            return;
+        }
+
+        horizontalLines.clear();
+
+        /**
+         * calculates the size of X axis (only the useful size) is because that the '- y.getX1()' to recompense the
+         * unuseful size.
+         */
+        int lengthX = x.length() - y.getX1();
+
+        /**
+         * Estimates the size of each "line block" to draw a signal
+         */
+        int blockSize = lengthX / text.length();
+
+        Color oldColor = g.getColor();
+        g.setColor(color);
+
+        drawBits(g, x, y, yMax, yMin, blockSize);
+
+        drawVerticalLines(g);
+
+        g.setColor(oldColor);
+    }
+
+    /**
+     * Only draw the bits from text.
+     *
+     * @param g Referenced graphics.
+     * @param x X axis.
+     * @param y Y axis.
+     * @param yMax Max y.
+     * @param yMin Min y.
+     * @param blockSize Block size where each bit will stay.
+     */
+    public abstract void drawBits(Graphics g, Line x, Line y, int yMax, int yMin, int blockSize);
 
 }

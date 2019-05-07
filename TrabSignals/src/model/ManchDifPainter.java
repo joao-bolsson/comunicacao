@@ -18,7 +18,8 @@ public class ManchDifPainter extends Painter {
     }
 
     @Override
-    public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
+    public void drawBits(final Graphics g, final Line x, final Line y, final int yMax, final int yMin,
+            final int blockSize) {
         // TODO
     }
 

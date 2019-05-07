@@ -142,7 +142,7 @@ public class Plane extends JPanel {
      * @return The line that represents the X axis.
      */
     private Line getAxisX() {
-        return new Line(0, (int) (getHeight() * 0.5), getWidth(), (int) (getHeight() * 0.5), Color.BLACK);
+        return new Line(0, (int) (getHeight() * 0.5), getWidth(), (int) (getHeight() * 0.5));
     }
 
     /**
@@ -150,7 +150,7 @@ public class Plane extends JPanel {
      */
     private Line getAxisY() {
         // if we draw the y axis starting at point (0, 0) we can't see it. So, we push a litle bit to the right (40).
-        return new Line(40, 0, 40, getHeight(), Color.BLACK);
+        return new Line(40, 0, 40, getHeight());
     }
 
     private void drawPlane(final Graphics g) {

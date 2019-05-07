@@ -18,26 +18,8 @@ public class SimplePainter extends Painter {
     }
 
     @Override
-    public void draw(final Graphics g, final Line x, final Line y, final int yMax, final int yMin) {
-        if (!canDraw()) {
-            return;
-        }
-
-        horizontalLines.clear();
-
-        /**
-         * calculates the size of X axis (only the useful size) is because that the '- y.getX1()' to recompense the
-         * unuseful size
-         */
-        int lengthX = x.length() - y.getX1();
-
-        /**
-         * Estimates the size of each "line block" to draw a signal
-         */
-        int blockSize = lengthX / text.length();
-
-        Color oldColor = g.getColor();
-        g.setColor(color);
+    public void drawBits(final Graphics g, final Line x, final Line y, final int yMax, final int yMin,
+            final int blockSize) {
         String[] split = text.split("");
 
         int i = 0;
@@ -50,22 +32,17 @@ public class SimplePainter extends Painter {
             int y1 = 0;
             if (bit == 0) {
                 // desenha no zero
-
                 y1 = x.getY1();
             } else if (bit == 1) {
                 // desenha no 5
                 y1 = yMax;
             }
 
-            addLine(new Line(x1, y1, x2, y1, color));
+            addLine(new Line(x1, y1, x2, y1));
 
             g.drawLine(x1, y1, x2, y1);
             i++;
         }
-
-        drawVerticalLines(g);
-
-        g.setColor(oldColor);
     }
 
 }
