@@ -5,8 +5,8 @@ import java.awt.Graphics;
 
 /**
  *
- * @author João Bolsson (jvmarques@inf.ufsm.br)
- * @version 2019, May 02.
+ * @author Gabriel Righi (gfrighi@inf.ufsm.br)
+ * @version 2019, May 06.
  */
 public class PseudoTernPainter extends Painter {
 
