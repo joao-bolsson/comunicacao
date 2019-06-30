@@ -23,7 +23,8 @@ public class Client {
 
     public void start() {
         try {
-            Socket cliente = new Socket("192.168.0.172", 12345);
+            // localhost
+            Socket cliente = new Socket("127.0.0.1", 12345);
             try (ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream())) {
                 Date data_atual = (Date) entrada.readObject();
                 JOptionPane.showMessageDialog(null, "Data recebida do servidor:" + data_atual.toString());
