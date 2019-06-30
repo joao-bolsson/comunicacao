@@ -5,12 +5,12 @@
  */
 package control;
 
-import java.awt.HeadlessException;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.PrintStream;
 import java.net.Socket;
-import java.util.Date;
-import javax.swing.JOptionPane;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,15 +23,20 @@ public class Client {
 
     public void start() {
         try {
-            // localhost
-            Socket cliente = new Socket("127.0.0.1", 12345);
-            try (ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream())) {
-                Date data_atual = (Date) entrada.readObject();
-                JOptionPane.showMessageDialog(null, "Data recebida do servidor:" + data_atual.toString());
+            try (Socket cliente = new Socket("127.0.0.1", 12345)) {
+                System.out.println("O cliente se conectou ao servidor!");
+
+                try (Scanner teclado = new Scanner(System.in);
+                        PrintStream saida = new PrintStream(cliente.getOutputStream())) {
+
+                    while (teclado.hasNextLine()) {
+                        saida.println(teclado.nextLine());
+                    }
+
+                }
             }
-            System.out.println("Conexão encerrada");
-        } catch (HeadlessException | IOException | ClassNotFoundException e) {
-            System.out.println("Erro: " + e);
+        } catch (IOException ex) {
+            Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

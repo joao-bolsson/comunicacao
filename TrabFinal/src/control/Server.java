@@ -6,10 +6,11 @@
 package control;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,23 +22,24 @@ public class Server {
     }
 
     public void start() {
+        ServerSocket servidor;
         try {
-            // Instancia o ServerSocket ouvindo a porta 12345
-            ServerSocket servidor = new ServerSocket(12345);
-            System.out.println("Servidor ouvindo a porta 12345");
-            while (true) {
-                // o método accept() bloqueia a execução até que
-                // o servidor receba um pedido de conexão
-                try (Socket cliente = servidor.accept()) {
-                    System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
-                    try (ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream())) {
-                        saida.flush();
-                        saida.writeObject(new Date());
+            servidor = new ServerSocket(12345);
+
+            System.out.println("Porta 12345 aberta!");
+
+            try (Socket cliente = servidor.accept()) {
+                System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
+
+                try (Scanner s = new Scanner(cliente.getInputStream())) {
+                    while (s.hasNextLine()) {
+                        System.out.println(s.nextLine());
                     }
                 }
+                servidor.close();
             }
-        } catch (IOException e) {
-            System.out.println("Erro: " + e.getMessage());
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
