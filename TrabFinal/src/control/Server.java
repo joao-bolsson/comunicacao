@@ -1,10 +1,10 @@
 package control;
 
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 
 /**
  *
@@ -29,22 +29,32 @@ public class Server {
      */
     public void start() {
         try {
-            // Instancia o ServerSocket ouvindo a porta 12345
-            ServerSocket servidor = new ServerSocket(port);
-            System.out.println("Servidor ouvindo a porta " + port);
-            while (true) {
-                // o método accept() bloqueia a execução até que
-                // o servidor receba um pedido de conexão
-                try (Socket cliente = servidor.accept()) {
-                    System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
-                    try (ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream())) {
-                        saida.flush();
-                        saida.writeObject(new Date());
+            ServerSocket server = new ServerSocket(port);
+            System.out.println("Server started");
+
+            System.out.println("Waiting for a client ...");
+
+            DataInputStream in;
+            try (Socket socket = server.accept()) {
+                System.out.println("Client accepted");
+                // takes input from the client socket
+                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                String line = "";
+                // reads message from client until "Over" is sent
+                while (!line.equalsIgnoreCase("over")) {
+                    try {
+                        line = in.readUTF();
+                        System.out.println("Mensagem recebida: " + line);
+
+                    } catch (IOException i) {
+                        System.out.println(i);
                     }
                 }
+                System.out.println("Closing connection");
             }
-        } catch (IOException e) {
-            System.out.println("Erro: " + e.getMessage());
+            in.close();
+        } catch (IOException i) {
+            System.out.println(i);
         }
     }
 

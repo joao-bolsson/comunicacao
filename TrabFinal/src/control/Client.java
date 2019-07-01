@@ -1,11 +1,11 @@
 package control;
 
-import java.awt.HeadlessException;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
-import java.util.Date;
-import javax.swing.JOptionPane;
+import java.net.UnknownHostException;
 
 /**
  *
@@ -30,14 +30,42 @@ public class Client {
      */
     public void start() {
         try {
-            Socket cliente = new Socket("127.0.0.1", port);
-            try (ObjectInputStream entrada = new ObjectInputStream(cliente.getInputStream())) {
-                Date data_atual = (Date) entrada.readObject();
-                JOptionPane.showMessageDialog(null, "Data recebida do servidor:" + data_atual.toString());
+            Socket socket = new Socket("127.0.0.1", port);
+            System.out.println("Connected");
+
+            // takes input from terminal
+            BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+
+            // sends output to the socket
+            DataOutputStream out = new DataOutputStream(socket.getOutputStream());
+
+            // string to read message from input
+            String line = "";
+
+            // keep reading until "Over" is input
+            while (!line.equals("Over")) {
+                try {
+                    line = input.readLine();
+
+                    System.out.println("Mensagem Enviada: " + line);
+                    out.writeUTF(line);
+                } catch (IOException i) {
+                    System.out.println(i);
+                }
             }
-            System.out.println("Conexão Encerrada");
-        } catch (HeadlessException | IOException | ClassNotFoundException e) {
-            System.out.println("Erro: " + e);
+
+            // close the connection
+            try {
+                input.close();
+                out.close();
+                socket.close();
+            } catch (IOException i) {
+                System.out.println(i);
+            }
+        } catch (UnknownHostException u) {
+            System.out.println(u);
+        } catch (IOException i) {
+            System.out.println(i);
         }
     }
 

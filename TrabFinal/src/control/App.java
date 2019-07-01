@@ -9,13 +9,13 @@ public class App {
 
     private static final int PORT = 12345;
 
-    // TODO: temporary code
-    public static final boolean USE_DATAGRAM = true;
-
     private final Client client;
 
     private final Server server;
 
+    /**
+     * Default construct.
+     */
     public App() {
         client = new Client(PORT);
         server = new Server(PORT);
