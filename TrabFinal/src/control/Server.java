@@ -1,13 +1,10 @@
 package control;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
 
 /**
  *
@@ -16,46 +13,38 @@ import java.util.logging.Logger;
  */
 public class Server {
 
-    public Server() {
+    private final int port;
+
+    /**
+     * Creates a server to listen the given port.
+     *
+     * @param port Given port to listen.
+     */
+    public Server(final int port) {
+        this.port = port;
     }
 
+    /**
+     * Starts the server to receive messages.
+     */
     public void start() {
-        if (1 > 0) {
-            start2();
-            return;
-        }
-        ServerSocket servidor;
         try {
-            servidor = new ServerSocket(12345);
-
-            System.out.println("Porta 12345 aberta!");
-
-            try (Socket cliente = servidor.accept()) {
-                System.out.println("Nova conexão com o cliente " + cliente.getInetAddress().getHostAddress());
-
-                try (Scanner s = new Scanner(cliente.getInputStream())) {
-                    while (s.hasNextLine()) {
-                        System.out.println(s.nextLine());
+            // Instancia o ServerSocket ouvindo a porta 12345
+            ServerSocket servidor = new ServerSocket(port);
+            System.out.println("Servidor ouvindo a porta " + port);
+            while (true) {
+                // o método accept() bloqueia a execução até que
+                // o servidor receba um pedido de conexão
+                try (Socket cliente = servidor.accept()) {
+                    System.out.println("Cliente conectado: " + cliente.getInetAddress().getHostAddress());
+                    try (ObjectOutputStream saida = new ObjectOutputStream(cliente.getOutputStream())) {
+                        saida.flush();
+                        saida.writeObject(new Date());
                     }
                 }
-                servidor.close();
             }
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void start2() {
-        try (DatagramSocket ds = new DatagramSocket(3000)) {
-            byte[] buf = new byte[1024];
-
-            DatagramPacket dp = new DatagramPacket(buf, 1024);
-            ds.receive(dp);
-
-            String strRecv = new String(dp.getData(), 0, dp.getLength());
-            System.out.println(strRecv);
-        } catch (IOException ex) {
-            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException e) {
+            System.out.println("Erro: " + e.getMessage());
         }
     }
 

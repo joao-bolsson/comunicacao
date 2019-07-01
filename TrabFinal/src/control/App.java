@@ -1,25 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package control;
 
 /**
  *
- * @author joao
+ * @author João Bolsson (jvmarques@inf.ufsm.br).
+ * @version 2019, Jun 30.
  */
 public class App {
+
+    private static final int PORT = 12345;
+
+    // TODO: temporary code
+    public static final boolean USE_DATAGRAM = true;
 
     private final Client client;
 
     private final Server server;
 
     public App() {
-        client = new Client();
-        server = new Server();
+        client = new Client(PORT);
+        server = new Server(PORT);
     }
 
+    /**
+     * Starts the application.
+     */
     public void start() {
         Thread thServer = new Thread() {
             @Override
@@ -40,7 +44,12 @@ public class App {
         thClient.start();
     }
 
-    public static void main(String[] args) {
+    /**
+     * Main method to run the APP.
+     *
+     * @param args Command line arguments.
+     */
+    public static void main(final String[] args) {
         App app = new App();
         app.start();
     }
