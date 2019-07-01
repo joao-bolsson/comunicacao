@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package control;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
@@ -14,7 +11,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author joao
+ * @author João Bolsson (jvmarques@inf.ufsm.br).
+ * @version 2019, Jun 30.
  */
 public class Server {
 
@@ -22,6 +20,10 @@ public class Server {
     }
 
     public void start() {
+        if (1 > 0) {
+            start2();
+            return;
+        }
         ServerSocket servidor;
         try {
             servidor = new ServerSocket(12345);
@@ -38,6 +40,20 @@ public class Server {
                 }
                 servidor.close();
             }
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void start2() {
+        try (DatagramSocket ds = new DatagramSocket(3000)) {
+            byte[] buf = new byte[1024];
+
+            DatagramPacket dp = new DatagramPacket(buf, 1024);
+            ds.receive(dp);
+
+            String strRecv = new String(dp.getData(), 0, dp.getLength());
+            System.out.println(strRecv);
         } catch (IOException ex) {
             Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
         }
