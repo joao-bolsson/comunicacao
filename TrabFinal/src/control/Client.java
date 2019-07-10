@@ -139,13 +139,18 @@ public class Client extends JFrame {
     public void sendMessage(final String msg) throws IOException {
         Frame frame = new Frame(msg);
 
+        // data with checksum
+        char[] data = Frame.toCharArray(frame.getData());
+
         System.out.println("checksum: " + frame.checksum());
 
         if (msg.equals("Sair")) {
             bfw.write("Desconectado \r\n");
             txtChat.append("Desconectado \r\n");
         } else {
-            bfw.write(msg + "\r\n"); // sends to the server
+            bfw.write(data);
+            bfw.newLine();
+//            bfw.write(msg + "\r\n"); // sends to the server
             txtChat.append(txtNome.getText() + ": " + txtMsg.getText() + "\r\n");
         }
         bfw.flush();
@@ -169,6 +174,8 @@ public class Client extends JFrame {
                 if (msg.equals("Sair")) {
                     txtChat.append("Servidor caiu! \r\n");
                 } else {
+
+                    System.out.println("recebeu msg: " + msg);
                     txtChat.append(msg + "\r\n");
                 }
             }

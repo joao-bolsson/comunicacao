@@ -60,4 +60,14 @@ public class Frame {
         return pack;
     }
 
+    public static char[] toCharArray(final byte[] data) {
+        StringBuilder builder = new StringBuilder();
+
+        for (byte b : data) {
+            builder.append(b);
+        }
+
+        return builder.toString().toCharArray();
+    }
+
 }
