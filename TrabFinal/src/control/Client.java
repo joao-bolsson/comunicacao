@@ -16,6 +16,7 @@ import java.io.Writer;
 import java.net.Socket;
 import javax.swing.*;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
+import model.Frame;
 
 /**
  *
@@ -136,12 +137,16 @@ public class Client extends JFrame {
      * @throws IOException
      */
     public void sendMessage(final String msg) throws IOException {
+        Frame frame = new Frame(msg);
+
+        System.out.println("checksum: " + frame.checksum());
+
         if (msg.equals("Sair")) {
             bfw.write("Desconectado \r\n");
             txtChat.append("Desconectado \r\n");
         } else {
-            bfw.write(msg + "\r\n");
-            txtChat.append(txtNome.getText() + " diz -> " + txtMsg.getText() + "\r\n");
+            bfw.write(msg + "\r\n"); // sends to the server
+            txtChat.append(txtNome.getText() + ": " + txtMsg.getText() + "\r\n");
         }
         bfw.flush();
         txtMsg.setText("");

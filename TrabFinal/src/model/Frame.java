@@ -1,6 +1,6 @@
 package model;
 
-import java.util.BitSet;
+import java.util.Arrays;
 
 /**
  *
@@ -9,30 +9,55 @@ import java.util.BitSet;
  */
 public class Frame {
 
-    private final BitSet bits;
+    /**
+     * Stores all the bytes to send, and the checksum.
+     */
+    private final byte[] data;
 
     /**
-     * Creates a frame with specified size.
+     * Creates a frame with data to send.
      *
-     * @param size Frames size.
-     * @param data Data to put on this frame. The data must be a binary string, like 011001, for example.
+     * @param data Data to send
      */
-    public Frame(byte size, final String data) {
-        if (size <= data.length()) {
-            throw new IllegalArgumentException("The data is too long for this frame");
-        }
-        bits = new BitSet(size);
+    public Frame(final String data) {
+        this.data = new byte[data.length()];
 
         init(data);
     }
 
     private void init(final String data) {
-        String[] split = data.split("");
+        byte[] bytes = data.getBytes();
 
-        int i = 0;
-        for (String s : split) {
-            bits.set(i, s.equals("1"));
+        System.arraycopy(bytes, 0, this.data, 0, this.data.length);
+        System.out.println("bytes to send: " + Arrays.toString(this.data));
+    }
+
+    /**
+     * The checksum of this frame.
+     *
+     * @return The checksum.
+     */
+    public byte checksum() {
+        short sum = 0;
+        for (byte b : data) {
+            sum += b;
         }
+
+        return (byte) sum;
+    }
+
+    /**
+     * The data of this frame with checksum
+     *
+     * @return The data with checksum on the last position.
+     */
+    public byte[] getData() {
+        byte[] pack = new byte[data.length + 1];
+        System.arraycopy(data, 0, pack, 0, data.length);
+
+        pack[data.length] = checksum();
+
+        return pack;
     }
 
 }
