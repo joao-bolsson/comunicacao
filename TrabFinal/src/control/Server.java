@@ -31,6 +31,11 @@ public class Server extends Thread {
     private InputStreamReader inr;
     private BufferedReader bfr;
 
+    /**
+     * Creates a server.
+     *
+     * @param con Client socket.
+     */
     public Server(final Socket con) {
         this.con = con;
         try {
@@ -57,13 +62,19 @@ public class Server extends Thread {
                 sendToAll(bfw, msg);
                 System.out.println(msg);
             }
-
-        } catch (IOException e) {
+        } catch (final IOException e) {
             System.out.println(e);
         }
     }
 
-    public void sendToAll(BufferedWriter bwSaida, String msg) throws IOException {
+    /**
+     * Send the message to all clients.
+     *
+     * @param bwSaida Buffer to write the message.
+     * @param msg Message to send.
+     * @throws IOException
+     */
+    public void sendToAll(final BufferedWriter bwSaida, final String msg) throws IOException {
         BufferedWriter bwS;
 
         for (BufferedWriter bw : clientes) {
@@ -75,8 +86,12 @@ public class Server extends Thread {
         }
     }
 
-    public static void main(String[] args) {
-
+    /**
+     * Main method to show the server configurations.
+     *
+     * @param args Command line arguments.
+     */
+    public static void main(final String[] args) {
         try {
             //Cria os objetos necessário para instânciar o servidor
             JLabel lblMessage = new JLabel("Porta do Servidor:");
