@@ -21,22 +21,29 @@ public class Frame {
      */
     private final byte[] data;
 
+    private final String msg;
+
     /**
      * Creates a frame with data to send.
      *
      * @param data Data to send
      */
     public Frame(final String data) {
+        this.msg = data;
         this.data = new byte[data.length()];
 
         init(data);
+    }
+
+    @Override
+    public String toString() {
+        return "[" + msg + "]";
     }
 
     private void init(final String data) {
         byte[] bytes = data.getBytes();
 
         System.arraycopy(bytes, 0, this.data, 0, this.data.length);
-        System.out.println("bytes to send: " + Arrays.toString(this.data));
     }
 
     /**
@@ -45,6 +52,10 @@ public class Frame {
      * @return The checksum.
      */
     public byte checksum() {
+        return checksum(false);
+    }
+
+    public byte checksum(boolean withError) {
         short sum = 0;
         for (byte b : data) {
             sum -= b;
@@ -81,7 +92,10 @@ public class Frame {
             builder.append(SEPARATOR);
         }
 
-        return builder.toString().toCharArray();
+        String toString = builder.toString();
+        int lastIndexOf = toString.lastIndexOf(SEPARATOR);
+
+        return toString.substring(0, lastIndexOf).toCharArray();
     }
 
     /**
@@ -111,16 +125,28 @@ public class Frame {
 
             Frame frame = new Frame(line);
 
-            System.out.println("frame checksum: " + frame.checksum());
-            System.out.println("frame to send: " + Arrays.toString(frame.getData()));
-            char[] data = Frame.toCharArray(frame.getData());
-            String msgReceived = String.valueOf(data);
-            System.out.println("msg received: " + msgReceived);
-            System.out.println("checksum received: " + Frame.checksumFromString(String.valueOf(data)));
-
+            frame.simulateSending(false);
         } catch (IOException ex) {
             Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void simulateSending(boolean withError) {
+        System.out.println("SIMULATION FOR frame: " + msg);
+        System.out.println("frame checksum: " + checksum(withError));
+        System.out.println("frame to send: " + Arrays.toString(getData()));
+        char[] dt = Frame.toCharArray(getData());
+        String msgReceived = String.valueOf(dt);
+
+        if (withError) {
+            msgReceived += "11";
+        }
+
+        System.out.println("msg received: " + msgReceived);
+        byte received = Frame.checksumFromString(msgReceived);
+        System.out.println("checksum received: " + received);
+
+        System.out.println("Send ok: " + (received == 0));
     }
 
 }
