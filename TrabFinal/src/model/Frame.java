@@ -14,6 +14,8 @@ import java.util.logging.Logger;
  */
 public class Frame {
 
+    public static final String SEPARATOR = " ";
+
     /**
      * Stores all the bytes to send, and the checksum.
      */
@@ -76,28 +78,26 @@ public class Frame {
 
         for (byte b : data) {
             builder.append(b);
-            builder.append('|');
+            builder.append(SEPARATOR);
         }
 
         return builder.toString().toCharArray();
     }
 
     /**
-     * Gets the original message.
      *
-     * @param str The received message in char values, like 49|50, will be transformed in -> "12"
-     * @return
+     * @param str String like "49 50 -99", checksum will be: 49 + 50 - 99 = 0.
+     * @return The checksum according with each value in the string.
      */
-    public static String charToString(final String str) {
-        StringBuilder builder = new StringBuilder();
-
-        String[] split = str.split("|");
+    public static byte checksumFromString(final String str) {
+        byte sum = 0;
+        String[] split = str.split(SEPARATOR);
 
         for (String s : split) {
-            System.out.println("s: " + s);
+            sum += Integer.parseInt(s);
         }
 
-        return builder.toString();
+        return sum;
     }
 
     // TODO: temporario, somente para testes
@@ -112,10 +112,11 @@ public class Frame {
             Frame frame = new Frame(line);
 
             System.out.println("frame checksum: " + frame.checksum());
-            System.out.println("frame bytes to send: " + Arrays.toString(frame.getData()));
-            System.out.println("data to send: " + Arrays.toString(Frame.toCharArray(frame.getData())));
-
-            System.out.println("chars received: " + Frame.charToString("49|50"));
+            System.out.println("frame to send: " + Arrays.toString(frame.getData()));
+            char[] data = Frame.toCharArray(frame.getData());
+            String msgReceived = String.valueOf(data);
+            System.out.println("msg received: " + msgReceived);
+            System.out.println("checksum received: " + Frame.checksumFromString(String.valueOf(data)));
 
         } catch (IOException ex) {
             Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
