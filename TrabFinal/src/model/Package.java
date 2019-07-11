@@ -6,6 +6,7 @@
 package model;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -15,27 +16,39 @@ public class Package {
 
     private final Frame[] frames;
 
+    private final boolean[] results;
+
     public Package(final Frame[] frames) {
         this.frames = frames;
+        results = new boolean[frames.length];
+
+        for (int i = 0; i < results.length; i++) {
+            results[i] = false;
+        }
     }
 
-    public void simulateSending(byte frameWithError) {
-        byte i = 0;
-
+    public void simulateSending(final List<Byte> withErrors) {
         System.out.println("frames: " + Arrays.toString(frames));
 
-        while (i < frames.length) {
+        for (byte i = 0; i < frames.length; i++) {
             System.out.println("===============================");
             Frame frame = frames[i];
-            frame.simulateSending(i == frameWithError);
+            frame.simulateSending(withErrors.contains(i));
 
-            // se não teve erro no envio avança, se não tenta novamente.
-            if (frame.wasSend()) {
-                i++;
-            } else {
-                frameWithError = -1; // vai enviar certo na segunda tentativa
+            results[i] = frame.wasSend();
+        }
+
+        System.out.println("------enviando novamente -----");
+        for (int i = 0; i < results.length; i++) {
+            if (!results[i]) {
+                Frame frame = frames[i];
+                // vai enviar certo na segunda tentativa
+                frame.simulateSending(false);
+
+                results[i] = frame.wasSend();
             }
         }
+
     }
 
 }

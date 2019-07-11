@@ -5,13 +5,13 @@
  */
 package model;
 
+import java.util.Arrays;
+
 /**
  *
  * @author joao
  */
 public class Demo {
-
-    private static final byte POS_ERROR = 3;
 
     public static void main(String[] args) {
         Frame frame1 = new Frame("12");
@@ -22,7 +22,9 @@ public class Demo {
         Frame frame6 = new Frame("87");
 
         Package pack = new Package(new Frame[]{frame1, frame2, frame3, frame4, frame5, frame6});
-        pack.simulateSending(POS_ERROR);
+        byte pos1 = 2;
+        byte pos2 = 4;
+        pack.simulateSending(Arrays.asList(pos1, pos2));
     }
 
 }
