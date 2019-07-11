@@ -23,6 +23,8 @@ public class Frame {
 
     private final String msg;
 
+    private boolean sendOk = false;
+
     /**
      * Creates a frame with data to send.
      *
@@ -146,7 +148,12 @@ public class Frame {
         byte received = Frame.checksumFromString(msgReceived);
         System.out.println("checksum received: " + received);
 
-        System.out.println("Send ok: " + (received == 0));
+        sendOk = received == 0;
+        System.out.println("Send ok: " + sendOk);
+    }
+
+    public boolean wasSend() {
+        return sendOk;
     }
 
 }

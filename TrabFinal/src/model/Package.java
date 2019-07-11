@@ -23,10 +23,18 @@ public class Package {
         byte i = 0;
 
         System.out.println("frames: " + Arrays.toString(frames));
-        for (Frame frame : frames) {
-            System.out.println("===============================");
-            frame.simulateSending(i++ == frameWithError);
 
+        while (i < frames.length) {
+            System.out.println("===============================");
+            Frame frame = frames[i];
+            frame.simulateSending(i == frameWithError);
+
+            // se não teve erro no envio avança, se não tenta novamente.
+            if (frame.wasSend()) {
+                i++;
+            } else {
+                frameWithError = -1; // vai enviar certo na segunda tentativa
+            }
         }
     }
 
