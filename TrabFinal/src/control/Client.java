@@ -174,8 +174,8 @@ public class Client extends JFrame {
                 if (msg.equals("Sair")) {
                     txtChat.append("Servidor caiu! \r\n");
                 } else {
-
                     System.out.println("recebeu msg: " + msg);
+
                     txtChat.append(msg + "\r\n");
                 }
             }
