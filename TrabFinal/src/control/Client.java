@@ -116,12 +116,7 @@ public class Client extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
-    /**
-     * Connects to the server.
-     *
-     * @throws IOException
-     */
-    public void connect() throws IOException {
+    private void connect() throws IOException {
         socket = new Socket(txtIP.getText(), Integer.parseInt(txtPorta.getText()));
         ou = socket.getOutputStream();
         ouw = new OutputStreamWriter(ou);
@@ -130,19 +125,11 @@ public class Client extends JFrame {
         bfw.flush();
     }
 
-    /**
-     * Sends the message.
-     *
-     * @param msg Message to send.
-     * @throws IOException
-     */
-    public void sendMessage(final String msg) throws IOException {
+    private void sendMessage(final String msg) throws IOException {
         Frame frame = new Frame(msg);
 
         // data with checksum
         char[] data = Frame.toCharArray(frame.getData());
-
-        System.out.println("checksum: " + frame.checksum());
 
         if (msg.equals("Sair")) {
             bfw.write("Desconectado \r\n");
@@ -157,12 +144,7 @@ public class Client extends JFrame {
         txtMsg.setText("");
     }
 
-    /**
-     * Listen the channel.
-     *
-     * @throws IOException
-     */
-    public void listen() throws IOException {
+    private void listen() throws IOException {
         InputStream in = socket.getInputStream();
         InputStreamReader inr = new InputStreamReader(in);
         BufferedReader bfr = new BufferedReader(inr);
@@ -171,10 +153,31 @@ public class Client extends JFrame {
         while (!"Sair".equalsIgnoreCase(msg)) {
             if (bfr.ready()) {
                 msg = bfr.readLine();
+
+                int lastIndexOf = msg.lastIndexOf(">");
+                String realMessage = msg.substring(lastIndexOf + 1);
+
+                Frame frame = new Frame("ok");
+
+                // data with checksum
+                char[] data = Frame.toCharArray(frame.getData());
+
+                String valueOf = String.valueOf(data);
+
                 if (msg.equals("Sair")) {
                     txtChat.append("Servidor caiu! \r\n");
+                } else if (valueOf.equals(realMessage)) {
+                    System.out.println("ok, confirmação recebida, manda o próximo");
+                    // TODO: mandar o proximo frame na janela
                 } else {
-                    System.out.println("recebeu msg: " + msg);
+                    byte checksum = Frame.checksumFromString(realMessage);
+                    if (checksum == 0) {
+                        System.out.println("ok, mensagem sem erros");
+
+                        sendMessage("ok");
+                    } else {
+                        JOptionPane.showMessageDialog(Client.this, "Mensagem com erro, checksum = " + checksum);
+                    }
 
                     txtChat.append(msg + "\r\n");
                 }
@@ -182,12 +185,7 @@ public class Client extends JFrame {
         }
     }
 
-    /**
-     * Exit from communication channel.
-     *
-     * @throws IOException
-     */
-    public void exit() throws IOException {
+    private void exit() throws IOException {
         sendMessage("Sair");
         bfw.close();
         ouw.close();
