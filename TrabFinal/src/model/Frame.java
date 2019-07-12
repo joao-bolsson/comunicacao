@@ -1,12 +1,6 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -23,8 +17,6 @@ public class Frame {
     private final byte[] data;
 
     private final String msg;
-
-    private boolean sendOk = false;
 
     private final boolean withError;
 
@@ -149,46 +141,6 @@ public class Frame {
         int lastIndexOf = toString.lastIndexOf(SEPARATOR);
 
         return toString.substring(0, lastIndexOf);
-    }
-
-    // TODO: temporario, somente para testes
-    public static void main(final String[] args) {
-        InputStreamReader input = new InputStreamReader(System.in);
-        BufferedReader buf = new BufferedReader(input);
-
-        System.out.println("dado: ");
-        try {
-            String line = buf.readLine();
-
-            Frame frame = new Frame(line);
-
-            frame.simulateSending(false);
-        } catch (IOException ex) {
-            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void simulateSending(boolean withError) {
-        System.out.println("SIMULATION FOR frame: " + msg);
-        System.out.println("frame checksum: " + checksum(withError));
-        System.out.println("frame to send: " + Arrays.toString(getData()));
-        char[] dt = Frame.toCharArray(getData());
-        String msgReceived = String.valueOf(dt);
-
-        if (withError) {
-            msgReceived += "11";
-        }
-
-        System.out.println("msg received: " + msgReceived);
-        byte received = Frame.checksumFromString(msgReceived);
-        System.out.println("checksum received: " + received);
-
-        sendOk = received == 0;
-        System.out.println("Send ok: " + sendOk);
-    }
-
-    public boolean wasSend() {
-        return sendOk;
     }
 
     @Override

@@ -62,6 +62,16 @@ public class Client extends JFrame {
     private final Timer timer = new Timer();
 
     /**
+     * List of sent frames (not confirmed).
+     */
+    private final List<Frame> okFrames = new ArrayList<>();
+
+    /**
+     * Just a count to simulate an error on a specific frame.
+     */
+    private int i = 0;
+
+    /**
      * Creates a client panel.
      */
     public Client() {
@@ -144,8 +154,6 @@ public class Client extends JFrame {
         bfw.flush();
     }
 
-    private final List<Frame> okFrames = new ArrayList<>();
-
     private void sendMessage(final String message) throws IOException {
         String[] split = message.split("(?<=\\G.{2})"); // quebra a mensagem de 2 em 2 caracteres
 
@@ -161,8 +169,6 @@ public class Client extends JFrame {
             sendFrame(frame);
         }
     }
-
-    private int i = 0;
 
     private void sendFrame(final Frame frame) throws IOException {
         // data with checksum
@@ -261,15 +267,12 @@ public class Client extends JFrame {
 
         @Override
         public void run() {
+            // cancel this task
+            cancel();
             if (!okFrames.contains(frame)) {
-
                 System.out.println("Não recebeu confirmação do frame " + frame);
-
-                // cancel this task
-                cancel();
-
                 try {
-                    System.out.println("Enviando o frame novamente"); // sem erros
+                    System.out.println("Enviando o frame " + frame + " novamente"); // sem erros
                     sendFrame(new Frame(frame.getMsg()));
                 } catch (IOException ex) {
                     Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
