@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,16 +26,27 @@ public class Frame {
 
     private boolean sendOk = false;
 
+    private final boolean withError;
+
     /**
      * Creates a frame with data to send.
      *
      * @param data Data to send
      */
     public Frame(final String data) {
+        this(data, false);
+    }
+
+    public Frame(final String data, boolean withError) {
         this.msg = data;
         this.data = new byte[data.length()];
 
+        this.withError = withError;
         init(data);
+    }
+
+    public String getMsg() {
+        return msg;
     }
 
     @Override
@@ -54,7 +66,7 @@ public class Frame {
      * @return The checksum.
      */
     public byte checksum() {
-        return checksum(false);
+        return checksum(withError);
     }
 
     public byte checksum(boolean withError) {
@@ -116,6 +128,29 @@ public class Frame {
         return sum;
     }
 
+    /**
+     * Decode message with checksum
+     *
+     * @param str String to decode.
+     * @return
+     */
+    public static String decodeMessage(final String str) {
+        String[] split = str.split(SEPARATOR);
+
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < split.length - 1; i++) {
+            int parseInt = Integer.parseInt(split[i]);
+            char a = (char) parseInt;
+
+            builder.append(a).append(SEPARATOR);
+        }
+        String toString = builder.toString();
+        int lastIndexOf = toString.lastIndexOf(SEPARATOR);
+
+        return toString.substring(0, lastIndexOf);
+    }
+
     // TODO: temporario, somente para testes
     public static void main(final String[] args) {
         InputStreamReader input = new InputStreamReader(System.in);
@@ -154,6 +189,27 @@ public class Frame {
 
     public boolean wasSend() {
         return sendOk;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + Objects.hashCode(this.msg);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof Frame)) {
+            return false;
+        }
+
+        final Frame other = (Frame) obj;
+        return Objects.equals(this.msg, other.msg);
     }
 
 }

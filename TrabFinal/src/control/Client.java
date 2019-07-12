@@ -14,9 +14,24 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
-import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 import static javax.swing.JFrame.EXIT_ON_CLOSE;
 import model.Frame;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 /**
  *
@@ -41,6 +56,10 @@ public class Client extends JFrame {
     private final JTextField txtIP = new JTextField("127.0.0.1");
     private final JTextField txtPorta = new JTextField("12345");
     private final JTextField txtNome = new JTextField("Cliente");
+
+    private static final byte SECONDS = 2;
+
+    private final Timer timer = new Timer();
 
     /**
      * Creates a client panel.
@@ -125,21 +144,43 @@ public class Client extends JFrame {
         bfw.flush();
     }
 
-    private void sendMessage(final String msg) throws IOException {
-        Frame frame = new Frame(msg);
+    private final List<Frame> okFrames = new ArrayList<>();
 
+    private void sendMessage(final String message) throws IOException {
+        String[] split = message.split("(?<=\\G.{2})"); // quebra a mensagem de 2 em 2 caracteres
+
+        // apenas um contador para determinar em qual frame vai dar erro
+        i = 0;
+        System.out.println("Enviando mensagem: " + message);
+
+        okFrames.clear();
+        for (String msg : split) {
+            // vai dar erro sempre no segundo
+            Frame frame = new Frame(msg, ++i == 2);
+
+            sendFrame(frame);
+        }
+    }
+
+    private int i = 0;
+
+    private void sendFrame(final Frame frame) throws IOException {
         // data with checksum
         char[] data = Frame.toCharArray(frame.getData());
 
-        if (msg.equals("Sair")) {
-            bfw.write("Desconectado \r\n");
-            txtChat.append("Desconectado \r\n");
-        } else {
-            bfw.write(data);
-            bfw.newLine();
-//            bfw.write(msg + "\r\n"); // sends to the server
-            txtChat.append(txtNome.getText() + ": " + txtMsg.getText() + "\r\n");
+        // removes all the canceled tasks
+        timer.purge();
+        // não reenvia ACK
+        if (!frame.toString().contains("ok")) {
+            System.out.println("vai verificar se o frame " + frame + " ja foi enviado daqui há " + SECONDS + "s");
+            timer.schedule(new RemindTask(frame), SECONDS * 1000);
         }
+
+        System.out.println("sending frame " + frame);
+        bfw.write(data);
+        bfw.newLine();
+        txtChat.append(txtNome.getText() + ": " + txtMsg.getText() + "\r\n");
+
         bfw.flush();
         txtMsg.setText("");
     }
@@ -155,31 +196,33 @@ public class Client extends JFrame {
                 msg = bfr.readLine();
 
                 int lastIndexOf = msg.lastIndexOf(">");
+                // isso vem em formato de caracteres 65 66 sum
                 String realMessage = msg.substring(lastIndexOf + 1);
 
-                Frame frame = new Frame("ok");
+                // ack frame
+                Frame frame = new Frame("ok - " + realMessage);
 
                 // data with checksum
                 char[] data = Frame.toCharArray(frame.getData());
 
                 String valueOf = String.valueOf(data);
 
-                if (msg.equals("Sair")) {
-                    txtChat.append("Servidor caiu! \r\n");
-                } else if (valueOf.equals(realMessage)) {
-                    System.out.println("ok, confirmação recebida, manda o próximo");
-                    // TODO: mandar o proximo frame na janela
+                if (valueOf.equals(realMessage)) {
+                    System.out.println("ACK do frame " + realMessage + " recebida");
+                    okFrames.add(new Frame(realMessage));
                 } else {
                     byte checksum = Frame.checksumFromString(realMessage);
                     if (checksum == 0) {
-                        System.out.println("ok, mensagem sem erros");
+                        System.out.println("frame " + realMessage + " recebido sem erros");
 
-                        sendMessage("ok");
+                        okFrames.add(new Frame(realMessage));
+
+                        // envia ACK
+                        sendMessage("ok - " + Frame.decodeMessage(realMessage));
+                        txtChat.append(msg + "\r\n");
                     } else {
-                        JOptionPane.showMessageDialog(Client.this, "Mensagem com erro, checksum = " + checksum);
+                        System.out.println("frame " + realMessage + " recebido com erros, descarta");
                     }
-
-                    txtChat.append(msg + "\r\n");
                 }
             }
         }
@@ -203,6 +246,36 @@ public class Client extends JFrame {
         Client app = new Client();
         app.connect();
         app.listen();
+    }
+
+    /**
+     * Task to execute when timer up.
+     */
+    private class RemindTask extends TimerTask {
+
+        private final Frame frame;
+
+        RemindTask(final Frame frame) {
+            this.frame = frame;
+        }
+
+        @Override
+        public void run() {
+            if (!okFrames.contains(frame)) {
+
+                System.out.println("Não recebeu confirmação do frame " + frame);
+
+                // cancel this task
+                cancel();
+
+                try {
+                    System.out.println("Enviando o frame novamente"); // sem erros
+                    sendFrame(new Frame(frame.getMsg()));
+                } catch (IOException ex) {
+                    Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
 }
